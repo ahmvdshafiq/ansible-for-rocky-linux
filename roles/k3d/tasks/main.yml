@@ -1,0 +1,10 @@
+- name: Download k3d binary
+  get_url:
+    url: https://github.com/k3d-io/k3d/releases/latest/download/k3d-linux-amd64
+    dest: /usr/local/bin/k3d
+    mode: '0755'
+
+- name: Create k3d cluster
+  command: k3d cluster create argocd-cluster
+  args:
+    creates: /root/.k3d/argocd-cluster

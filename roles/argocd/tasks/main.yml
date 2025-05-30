@@ -1,0 +1,15 @@
+- name: Wait for k3s kubeconfig to become available
+  wait_for:
+    path: /etc/rancher/k3s/k3s.yaml
+    timeout: 60
+  when: not ansible_check_mode
+
+- name: Export kubeconfig
+  shell: |
+    export KUBECONFIG=/etc/rancher/k3s/k3s.yaml && \
+    kubectl create namespace argocd || true && \
+    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+  environment:
+    KUBECONFIG: /root/.k3d/kubeconfig-argocd-cluster.yaml
+  args:
+    executable: /bin/bash

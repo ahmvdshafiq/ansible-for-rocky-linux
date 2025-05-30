@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  rocky1:
+    image: rockylinux:8
+    container_name: rocky1
+    hostname: rocky1
+    command: ["/usr/sbin/init"]
+    privileged: true
+    networks:
+      rocky_net:
+        ipv4_address: 172.28.1.10
+
+  rocky2:
+    image: rockylinux:8
+    container_name: rocky2
+    hostname: rocky2
+    command: ["/usr/sbin/init"]
+    privileged: true
+    networks:
+      rocky_net:
+        ipv4_address: 172.28.1.11
+
+networks:
+  rocky_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
