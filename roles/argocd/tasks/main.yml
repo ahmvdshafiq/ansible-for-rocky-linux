@@ -1,15 +1,13 @@
-- name: Wait for k3s kubeconfig to become available
-  wait_for:
-    path: /etc/rancher/k3s/k3s.yaml
-    timeout: 60
-  when: not ansible_check_mode
+- name: Create ArgoCD namespace
+  command: kubectl create namespace argocd
+  ignore_errors: yes
 
-- name: Export kubeconfig
-  shell: |
-    export KUBECONFIG=/etc/rancher/k3s/k3s.yaml && \
-    kubectl create namespace argocd || true && \
-    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-  environment:
-    KUBECONFIG: /root/.k3d/kubeconfig-argocd-cluster.yaml
+- name: Install ArgoCD
+  command: kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
   args:
-    executable: /bin/bash
+    creates: /tmp/argocd.installed
+
+- name: Touch install file to mark ArgoCD setup complete
+  file:
+    path: /tmp/argocd.installed
+    state: touch
