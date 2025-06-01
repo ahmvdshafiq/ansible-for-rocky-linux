@@ -1,12 +1,6 @@
-- name: Setup Docker, k3d, and ArgoCD on Rocky 8 containers
-  hosts: rocky
+- name: Setup Docker, k3d and ArgoCD
+  hosts: lubuntu
   become: true
-  gather_facts: false
-
-  pre_tasks:
-    - name: Ensure Python is installed
-      raw: dnf install -y python3
-
   roles:
     - docker
     - k3d
